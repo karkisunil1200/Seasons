@@ -1,21 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-class App extends React.Component {
-  constructor() {
-    super();
+import SeasonDisplay from './SeasonDisplay';
 
-    this.state = {
-      lat: null,
-      errMessage: ''
-    };
+class App extends React.Component {
+  state = {
+    lat: null,
+    errMessage: ''
+  };
+
+  componentDidMount() {
     window.navigator.geolocation.getCurrentPosition(
-      position => {
-        this.setState({lat: position.coords.latitude});
-      },
-      err => {
-        this.setState({errMessage: err.message});
-      }
+      position => this.setState({lat: position.coords.latitude}),
+      err => this.setState({errMessage: err.message})
     );
   }
   render() {
@@ -23,10 +20,14 @@ class App extends React.Component {
       return <div>Error: {this.state.errMessage}</div>;
     }
     if (!this.state.errMessage && this.state.lat) {
-      return <div>Latitude: {this.state.lat}</div>;
+      return <SeasonDisplay lat={this.state.lat} />;
     }
 
-    return <h1>Loading....</h1>;
+    return (
+      <h1>
+        Loading <i className='notched circle loading icon'></i>
+      </h1>
+    );
   }
 }
 
